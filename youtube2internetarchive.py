@@ -61,7 +61,7 @@ def main():
     }
     
     # Start preferences
-        if len(sys.argv) < 5:
+    if len(sys.argv) < 5:
         print 'python youtube2internetarchive.py [english|spanish] [cc|all] [collectionname] [overwrite|skip]'
         sys.exit()
 
