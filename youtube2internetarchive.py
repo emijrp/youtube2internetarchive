@@ -61,10 +61,8 @@ def main():
     }
     
     # Start preferences
-    
-    overwrite = True
-    if len(sys.argv) < 4:
-        print 'python youtube2internetarchive.py [english|spanish] [cc|all] [collectionname]'
+        if len(sys.argv) < 5:
+        print 'python youtube2internetarchive.py [english|spanish] [cc|all] [collectionname] [overwrite|skip]'
         sys.exit()
 
     language = sys.argv[1]
@@ -75,6 +73,7 @@ def main():
 
     cc = sys.argv[2].lower() == 'cc' and True or False
     collection = sys.argv[3]
+    overwrite = sys.argv[4].lower() == 'overwrite' and True or False
     # End preferences
 
     accesskey = open('keys.txt', 'r').readlines()[0].strip()
@@ -156,10 +155,10 @@ def main():
         item = internetarchive.get_item(itemname)
         md = dict(mediatype='movies', creator=uploader, language=language, collection=collection, title=title, description=u'{0} <br/><br/>Source: <a href="{1}">{2}</a><br/>Uploader: <a href="http://www.youtube.com/user/{3}">{4}</a><br/>Upload date: {5}'.format(description, videotodourl, videotodourl, uploader, uploader, upload_date), date=upload_date, year=upload_year, subject=subject, originalurl=videotodourl, licenseurl=(cc and 'http://creativecommons.org/licenses/by/3.0/' or ''))
         
-        print 'Se va a subir el fichero', videofilename
-        
         filestoupload = glob.glob('*-%s.*' % (videoid)) # in case of subtitles
         filestoupload.remove(jsonfilename) #exlcuding the json
+        print 'Se van a subir el/los fichero(s)', filestoupload
+        
         item.upload(filestoupload, metadata=md, access_key=accesskey, secret_key=secretkey)
 
         print 'You can browse it in https://archive.org/details/%s' % (itemname)
