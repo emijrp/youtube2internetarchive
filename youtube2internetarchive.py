@@ -45,7 +45,7 @@ import internetarchive
 
 def removeoddchars(s):
     #http://stackoverflow.com/questions/517923/what-is-the-best-way-to-remove-accents-in-a-python-unicode-string
-    s = ''.join((c for c in unicodedata.normalize('NFD', u'%s' % s) if unicodedata.category(c) != 'Mn'))
+    s = u''.join((c for c in unicodedata.normalize('NFD', u'%s' % s) if unicodedata.category(c) != 'Mn'))
     s = re.sub(ur"(?im)[^a-z0-9_\.-]", ur"", s) # greek chars and others cause errors in item name if not removed
     return s
 
@@ -136,10 +136,9 @@ def main():
             print 'Se ha encontrado mas de un video coincidente'
             sys.exit()
         
-        videofilename = videofilename[0]
-        itemname = removeoddchars('%s-%s' % (collection, videofilename.split(videoid)[0][:-1])) # [:-1] to remove the -
+        videofilename = unicode(videofilename[0], 'utf-8')
+        itemname = removeoddchars(u'%s-%s' % (collection, videofilename.split(videoid)[0][:-1])) # [:-1] to remove the -
         itemname = itemname[:88] + '-' + videoid
-        videofilename_ = removeoddchars(videofilename)
         if not re.search(ur"Item cannot be found", unicode(urllib.urlopen('http://archive.org/details/%s' % (itemname)).read(), 'utf-8')):
             print 'That item exists at Internet Archive', 'http://archive.org/details/%s' % (itemname)
             if not overwrite:
