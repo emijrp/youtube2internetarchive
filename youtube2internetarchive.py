@@ -144,14 +144,15 @@ def main():
 
         item = internetarchive.get_item(itemname)
         md = dict(mediatype='movies', creator=uploader, language=language, collection=collection, title=title, description=u'{0} <br/><br/>Source: <a href="{1}">{2}</a><br/>Uploader: <a href="http://www.youtube.com/user/{3}">{4}</a><br/>Upload date: {5}'.format(description, videotodourl, videotodourl, uploader, uploader, upload_date), date=upload_date, year=upload_year, subject=subject, originalurl=videotodourl, licenseurl=(cc and 'http://creativecommons.org/licenses/by/3.0/' or ''))
-
+        
+        print 'Se van a subir los ficheros'
+        print glob.glob('*%s*' % (videoid)
+        
         item.upload(glob.glob('*%s*' % (videoid)), metadata=md, access_key=accesskey, secret_key=secretkey)
 
         print 'You can browse it in https://archive.org/details/%s' % (itemname)
-        videotodourls.remove(videotodourl)
-        updatetodo(videotodourls)
-        for f in glob.glob('*%s*' % (videoid)):
-            os.remove(f)
+        #videotodourls.remove(videotodourl)
+        #updatetodo(videotodourls)
 
 if __name__ == '__main__':
     main()
