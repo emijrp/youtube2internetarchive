@@ -91,7 +91,7 @@ def main():
             continue
         
         #check if it is on IA
-        f = urllib.urlopen('https://archive.org/search.php?query=%s%%20subject%%3A"spanishrevolution"' % (videoid))
+        f = urllib.urlopen('https://archive.org/search.php?query=%s%%20subject%%3A"spanishrevolution"' % (videoid.strip('-')))
         raw = f.read()
         if not overwrite and not re.search(ur'Your search did not match any items in the Archive', raw):
             print u'Ya esta en Internet Archive'
