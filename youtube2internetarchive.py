@@ -60,9 +60,9 @@ def main():
         'english': {'01':'january', '02': 'february', '03':'march', '04':'april', '05':'may', '06':'june', '07':'july', '08':'august','09':'september','10':'october', '11':'november', '12':'december'},
     }
     
-    print os.getcwd()
-    
     # Start preferences
+    
+    overwrite = True
     if len(sys.argv) < 4:
         print 'python youtube2internetarchive.py [english|spanish] [cc|all] [collectionname]'
         sys.exit()
@@ -129,16 +129,27 @@ def main():
         uploader = json_['uploader']
         title = re.sub(u"%", u"/", json_['title']) # 6%7
         
-        videofilename = glob.glob('*%s.mp4' % (videoid))[0]
+        videofilename = glob.glob('*-%s.mp4' % (videoid))
+        if not videofilename:
+            print 'No se encontro el video'
+            sys.exit()
+        elif len(videofilename) > 1:
+            print 'Se ha encontrado mas de un video coincidente'
+            sys.exit()
         
+        videofilename = videofilename[0]
         itemname = removeoddchars('%s-%s' % (collection, videofilename.split(videoid)[0][:-1])) # [:-1] to remove the -
         itemname = itemname[:88] + '-' + videoid
         videofilename_ = removeoddchars(videofilename)
         if not re.search(ur"Item cannot be found", unicode(urllib.urlopen('http://archive.org/details/%s' % (itemname)).read(), 'utf-8')):
             print 'That item exists at Internet Archive', 'http://archive.org/details/%s' % (itemname)
-            videotodourls.remove(videotodourl)
-            updatetodo(videotodourls)
-            continue
+            if not overwrite:
+                print 'Marking as done and skiping...'
+                videotodourls.remove(videotodourl)
+                updatetodo(videotodourls)
+                continue
+            else:
+                print 'Reuploading...'
       
         subject = (u'; '.join([collection, upload_month, upload_year] + tags)) 
 
@@ -148,7 +159,7 @@ def main():
         print 'Se van a subir los ficheros'
         print glob.glob('*%s*' % (videoid))
         
-        item.upload(glob.glob('*%s*' % (videoid)), metadata=md, access_key=accesskey, secret_key=secretkey)
+        item.upload(glob.glob('*-%s.*' % (videoid)), metadata=md, access_key=accesskey, secret_key=secretkey)
 
         print 'You can browse it in https://archive.org/details/%s' % (itemname)
         #videotodourls.remove(videotodourl)
