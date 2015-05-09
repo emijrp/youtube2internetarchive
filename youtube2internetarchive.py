@@ -83,16 +83,17 @@ def main():
     
     while len(videotodourls) > 0:
         videotodourl = videotodourls[0]
+        print '\n', '#'*40, '\n', videotodourl, '\n', '#'*40
         videohtml = unicode(urllib.urlopen(videotodourl).read(), 'utf-8')
         videoid = videotodourl.split('watch?v=')[1]
-        if len(videoid) < 11:
+        if len(videoid) != 11:
             print 'Error en video id'
             continue
         
         #check if it is on IA
         f = urllib.urlopen('https://archive.org/search.php?query=%s%%20subject%%3A"spanishrevolution"' % (videoid))
         raw = f.read()
-        if not re.search(ur'Your search did not match any items in the Archive', raw):
+        if not overwrite and not re.search(ur'Your search did not match any items in the Archive', raw):
             print u'Ya esta en Internet Archive'
             videotodourls.remove(videotodourl)
             updatetodo(videotodourls)
