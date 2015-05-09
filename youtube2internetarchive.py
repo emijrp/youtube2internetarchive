@@ -22,10 +22,11 @@ Instructions:
  2) In the current directory, create a keys.txt file with your IA S3 keys. Accesskey and secretkey in two separated lines.
  3) Install youtube-dl
  4) Modify preferences if desired (see below).
- 5) Run this script: python youtube2internetarchive.py [english|spanish] [cc|all] [collectionname]
+ 5) Run this script: python youtube2internetarchive.py [english|spanish] [cc|all] [collectionname] [overwrite|skip]
     (where param 1 is language for the video dates,
      param 2 is a filter to upload only Creative Commons or all
-     param 3 is the collection name in Internet Archive)
+     param 3 is the collection name in Internet Archive
+     param 4 defines if overwrite or skip when item with the same name exists)
 """
 
 # Keys: http://archive.org/account/s3.php
