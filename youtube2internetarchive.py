@@ -110,7 +110,7 @@ def main():
         tags = re.findall(ur'<meta property="og:video:tag" content="([^<>]+)">', videohtml)
         
         #download video and info
-        os.system('./youtube-dl --write-info-json --write-description --all-subs %s' % (videotodourl))
+        os.system('./youtube-dl --write-info-json --all-subs %s' % (videotodourl))
         
         jsonfilename = glob.glob('*%s.info.json' % (videoid))
         if not jsonfilename:
@@ -156,14 +156,15 @@ def main():
         item = internetarchive.get_item(itemname)
         md = dict(mediatype='movies', creator=uploader, language=language, collection=collection, title=title, description=u'{0} <br/><br/>Source: <a href="{1}">{2}</a><br/>Uploader: <a href="http://www.youtube.com/user/{3}">{4}</a><br/>Upload date: {5}'.format(description, videotodourl, videotodourl, uploader, uploader, upload_date), date=upload_date, year=upload_year, subject=subject, originalurl=videotodourl, licenseurl=(cc and 'http://creativecommons.org/licenses/by/3.0/' or ''))
         
-        print 'Se van a subir los ficheros'
-        print glob.glob('*%s*' % (videoid))
+        print 'Se va a subir el fichero', videofilename
         
-        item.upload(glob.glob('*-%s.*' % (videoid)), metadata=md, access_key=accesskey, secret_key=secretkey)
+        filestoupload = glob.glob('*-%s.*' % (videoid)) # in case of subtitles
+        filestoupload.remove(jsonfilename) #exlcuding the json
+        item.upload(filestoupload, metadata=md, access_key=accesskey, secret_key=secretkey)
 
         print 'You can browse it in https://archive.org/details/%s' % (itemname)
-        #videotodourls.remove(videotodourl)
-        #updatetodo(videotodourls)
+        videotodourls.remove(videotodourl)
+        updatetodo(videotodourls)
 
 if __name__ == '__main__':
     main()
