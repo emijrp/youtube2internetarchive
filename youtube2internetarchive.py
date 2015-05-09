@@ -150,7 +150,7 @@ def main():
         print 'You can browse it in https://archive.org/details/%s' % (itemname)
         videotodourls.remove(videotodourl)
         updatetodo(videotodourls)
-        for f in glob.glob('*%s*' % (videoid):
+        for f in glob.glob('*%s*' % (videoid)):
             os.remove(f)
 
 if __name__ == '__main__':
